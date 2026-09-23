@@ -1,0 +1,223 @@
+# Copy to config.toml and configure only the services needed by your command.
+# config.toml is private and ignored. Environment variables override connection values.
+config_version = 1
+
+[logging]
+directory = "outputs/logs"
+
+[providers.llm]
+api_key = ""
+api_key_env = "GANGMU_LLM_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_LLM_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[providers.embedding]
+api_key = ""
+api_key_env = "GANGMU_EMBEDDING_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_EMBEDDING_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[providers.reranker]
+api_key = ""
+api_key_env = "GANGMU_RERANKER_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_RERANKER_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[providers.ocr]
+api_key = ""
+api_key_env = "GANGMU_OCR_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_OCR_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[providers.judge]
+api_key = ""
+api_key_env = "GANGMU_JUDGE_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_JUDGE_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[providers.agent]
+api_key = ""
+api_key_env = "GANGMU_AGENT_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_AGENT_BASE_URL"
+protocol = "openai_chat_completions"
+trust_env = true
+
+[models.default]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.node_extraction]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.dependency_extraction]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.dependency_fallback]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.sir]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.normalization]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.cross_document_alignment]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.cross_document_strict_verification]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.canonical_statement]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.sev]
+name = "gpt-5.6-terra"
+provider = "llm"
+
+[models.agent]
+name = "gpt-5.6-terra"
+provider = "agent"
+
+[models.evidence_precision_judge]
+name = "claude-opus-5"
+provider = "judge"
+
+[models.embedding]
+name = "qwen3-embedding-8b"
+provider = "embedding"
+dimensions = 2048
+
+[models.reranker]
+name = "qwen3-reranker-8b"
+provider = "reranker"
+
+[models.ocr_fast]
+name = "glm-4.6v"
+provider = "ocr"
+
+[models.ocr_premium]
+name = "glm-5v-turbo"
+provider = "ocr"
+
+[requests]
+timeout_seconds = 300.0
+connect_timeout_seconds = 20.0
+pool_timeout_seconds = 20.0
+max_connections = 20
+max_keepalive_connections = 10
+consecutive_failures_before_abort = 10
+max_completion_tokens = 32768
+call_attempts = 3
+json_repair_attempts = 3
+repair_retry_delay_seconds = 2.0
+concurrency_retry_delay_seconds = 30.0
+
+[ocr]
+method = "premium"
+parallel_workers = 10
+render_dpi = 220
+jpeg_quality = 92
+page_retry_attempts = 3
+retry_delay_seconds = 3.0
+fast_max_tokens = 8192
+premium_max_tokens = 8192
+timeout_seconds = 300.0
+toc_pages = [1, 2, 3, 4, 5]
+premium_retry_delay_seconds = 10.0
+premium_call_delay_seconds = 2.0
+
+[node_extraction]
+token_limit = 8192
+parallel_workers = 5
+max_split_depth = 4
+retry_overlap_tokens = 1000
+checkpoint_every_segments = 10
+
+[dependency_extraction]
+parallel_workers = 5
+batch_size = 5
+position_window = 5
+title_bm25_top_k = 10
+proof_bm25_top_k = 5
+title_score_weight = 0.8
+statement_score_weight = 0.2
+checkpoint_every_targets = 25
+
+[single_doc_pacing]
+enabled = false
+work_minutes = 25.0
+short_rest_minutes = 5.0
+windows_per_cycle = 3
+cycle_extra_rest_minutes = 15.0
+
+[normalization]
+parallel_workers = 5
+
+[embedding]
+parallel_workers = 5
+retry_delay_seconds = 5.0
+
+[reranker]
+top_k = 20
+timeout_seconds = 60.0
+call_attempts = 5
+retry_delay_seconds = 5.0
+
+[cross_document]
+reranker_parallel_workers = 5
+llm_parallel_workers = 5
+content_parallel_workers = 5
+evidence_retrieval_top_k = 50
+evidence_similarity_threshold = 0.5
+reranker_top_k = 20
+checkpoint_every_stage_results = 100
+llm_call_attempts = 5
+llm_retry_delay_seconds = 5.0
+provider_failures_before_abort = 5
+low_cohesion_similarity = 0.7
+representative_min_centroid_similarity = 0.7
+
+[cross_document_pacing]
+enabled = false
+work_minutes = 20.0
+short_rest_minutes = 5.0
+windows_per_cycle = 3
+cycle_extra_rest_minutes = 5.0
+
+[knowledge]
+default_field = "Algebra"
+default_subfield = "Others"
+
+[experiment]
+parallel_workers = 5
+embedding_top_k = 50
+minimum_similarity = 0.5
+reranker_top_k = 20
+
+[agent]
+executable = "claude"
+max_turns = 20
+timeout_seconds = 900.0
+max_additional_searches = 2
+
+[evaluation]
+parallel_workers = 5

@@ -1,0 +1,1 @@
+Return exactly one JSON object with exactly one key named 'relation'. Its value must be exactly 'equivalent' or 'not_equivalent'.

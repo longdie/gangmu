@@ -1,0 +1,28 @@
+# Credentials and machine-local data
+/config.toml
+/config.local.toml
+/config.*.local.toml
+.env
+.env.*
+!.env.example
+/.agent_runtime/
+/.claude/
+/.codex/
+/Material/
+/inputs/
+/outputs/
+/experiments/
+/tmp/
+/tests/
+/pytest.ini
+/logs/
+# Python environments and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.log
+.DS_Store
+Thumbs.db

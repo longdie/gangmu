@@ -1,0 +1,13 @@
+# Python 3.11; versions used to validate this release.
+numpy==2.4.6
+openai==2.40.0
+httpx==0.28.1
+rank-bm25==0.2.2
+mcp==2.0.0
+uvicorn==0.48.0
+Pillow==12.2.0
+PyMuPDF==1.27.2.3
+pypdf==6.12.2
+json-repair==0.60.0
+tiktoken==0.13.0
+filelock==3.29.1

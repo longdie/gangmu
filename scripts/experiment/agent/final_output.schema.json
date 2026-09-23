@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "prediction": {
+      "type": "string",
+      "enum": ["merge", "nil"]
+    },
+    "canonical_node_id": {
+      "type": ["integer", "null"]
+    },
+    "brief_reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "required": ["prediction", "canonical_node_id", "brief_reason"],
+  "additionalProperties": false
+}
