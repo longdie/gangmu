@@ -45,6 +45,8 @@ base_url_env = "GANGMU_JUDGE_BASE_URL"
 protocol = "openai_chat_completions"
 trust_env = true
 
+# Agent accepts Messages directly or Chat Completions through a local adapter.
+# The endpoint must support tool calls and return the configured model ID.
 [providers.agent]
 api_key = ""
 api_key_env = "GANGMU_AGENT_API_KEY"

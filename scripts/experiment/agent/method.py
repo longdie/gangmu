@@ -42,6 +42,7 @@ MAXIMUM_SEARCHES = 3
 IMPLEMENTATION_DEPENDENCIES = (
     "scripts/experiment/agent/method.py",
     "scripts/experiment/agent/claude_runner.py",
+    "scripts/experiment/agent/chat_bridge.py",
     "scripts/experiment/agent/controller.py",
     "scripts/experiment/agent/mcp_server.py",
     "scripts/experiment/agent/retrieval.py",
@@ -125,6 +126,7 @@ def method_settings(
         },
         "effort": effort,
         "provider": metadata["provider"],
+        "transport_protocol": provider_config.protocol,
         # The concrete temporary path is process-specific and must not enter
         # the experiment input signature. The runner receives it through
         # runtime.options at execution time.

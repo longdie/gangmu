@@ -20,7 +20,7 @@ cp config.example.toml config.toml
 
 `config.toml` is your private local configuration and is not included in the repository.
 
-Configure the required connection roles in `config.toml`. Each role has an API key, base URL, and protocol (`openai_chat_completions` or `claude_messages`). Environment variables such as `GANGMU_LLM_API_KEY` and `GANGMU_LLM_BASE_URL` override the corresponding values. Embedding and reranking use OpenAI-compatible embedding and `/rerank` endpoints. OCR uses a chat-completions endpoint supporting image inputs. Claude Code Agent requires a Messages-compatible endpoint and a separately installed `claude` executable (the paper used Claude Code v2.1.220).
+Configure the required connection roles in `config.toml`. Each role has an API key, base URL, and protocol (`openai_chat_completions` or `claude_messages`). Environment variables such as `GANGMU_LLM_API_KEY` and `GANGMU_LLM_BASE_URL` override the corresponding values. Embedding and reranking use OpenAI-compatible embedding and `/rerank` endpoints. OCR uses a chat-completions endpoint supporting image inputs. Claude Code Agent requires a separately installed `claude` executable (the paper used Claude Code v2.1.220). For its connection role, `claude_messages` connects directly to a Messages endpoint; `openai_chat_completions` uses a temporary local adapter to a Chat Completions endpoint. Both require tool-call support and a response model ID matching `[models.agent].name`. The adapter preserves the Claude Code agent, MCP tools, prompts, and output validation; it does not substitute another model or agent.
 
 | Role | Used for | Default model |
 | --- | --- | --- |

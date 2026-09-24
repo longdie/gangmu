@@ -144,6 +144,13 @@ class ClaudeCodeRunner:
                     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
                 }
             )
+            # Keep local MCP/transport credentials away from inherited proxies.
+            for proxy_key in ("NO_PROXY", "no_proxy"):
+                bypass = [item.strip() for item in environment.get(proxy_key, "").split(",") if item.strip()]
+                for host in ("127.0.0.1", "localhost", "::1"):
+                    if host not in bypass:
+                        bypass.append(host)
+                environment[proxy_key] = ",".join(bypass)
             tool_name = f"mcp__{MCP_SERVER_NAME}__{MCP_TOOL_NAME}"
             command = [
                 self.settings.executable,
@@ -270,7 +277,9 @@ class ClaudeCodeRunner:
         try:
             usage = aggregate_model_usage(events)
         except Exception as exc:
-            detail = _safe_stderr(stderr)
+            # API failures can be present only in the terminal result event,
+            # with no usage or stderr. Preserve that error instead of hiding it.
+            detail = _failure_message(exit_code, stderr, events)
             message = f"Claude Code usage parsing failed: {exc}"
             if detail:
                 message += f" | {detail}"
@@ -498,6 +507,7 @@ def _is_fatal_provider_error(message: str) -> bool:
         "unknown model",
         "does not support tool",
         "tool_use is not supported",
+        "upstream model mismatch",
     )
     return any(marker in lowered for marker in fatal_markers)
 

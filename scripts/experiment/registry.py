@@ -1,6 +1,6 @@
 """Shared resumable runner and clean result export for released experiments."""
 from __future__ import annotations
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from importlib import import_module
 from pathlib import Path
 import json
@@ -33,18 +33,44 @@ METHOD_DIRECTORIES = {
 
 @contextmanager
 def agent_settings(config):
-    """Keep connection secrets in a mode-0600 temporary file only while running."""
+    """Configure the declared transport without exposing upstream credentials."""
     model = config.model("agent")
     provider = config.provider(model.provider, require_api_key=True)
-    base_url = provider.base_url.rstrip("/")
-    for suffix in ("/v1/messages", "/messages"):
-        if base_url.endswith(suffix):
-            base_url = base_url[:-len(suffix)]
-            break
-    with tempfile.TemporaryDirectory(prefix="gangmu-agent-") as directory:
-        path = Path(directory)/"connection.json"
+    with ExitStack() as stack:
+        if provider.protocol == "openai_chat_completions":
+            from scripts.experiment.agent.chat_bridge import ChatCompletionsBridge
+
+            bridge = stack.enter_context(ChatCompletionsBridge(
+                api_key=provider.api_key,
+                base_url=provider.base_url,
+                model=model.name,
+                timeout_seconds=config.get_float("requests.timeout_seconds"),
+                trust_env=provider.trust_env,
+            ))
+            base_url, auth_token = bridge.base_url, bridge.auth_token
+        elif provider.protocol == "claude_messages":
+            base_url = provider.base_url.rstrip("/")
+            for suffix in ("/v1/messages", "/messages"):
+                if base_url.endswith(suffix):
+                    base_url = base_url[:-len(suffix)]
+                    break
+            auth_token = provider.api_key
+        else:
+            raise ValueError("Unsupported Agent connection protocol.")
+        directory = stack.enter_context(tempfile.TemporaryDirectory(prefix="gangmu-agent-"))
+        path = Path(directory) / "connection.json"
         path.touch(mode=0o600)
-        path.write_text(json.dumps({"env": {"ANTHROPIC_BASE_URL":base_url, "ANTHROPIC_AUTH_TOKEN":provider.api_key, "ANTHROPIC_DEFAULT_OPUS_MODEL":model.name, "ANTHROPIC_DEFAULT_SONNET_MODEL":model.name, "ANTHROPIC_DEFAULT_HAIKU_MODEL":model.name}, "model":"sonnet", "effortLevel":"medium"}))
+        path.write_text(json.dumps({
+            "env": {
+                "ANTHROPIC_BASE_URL": base_url,
+                "ANTHROPIC_AUTH_TOKEN": auth_token,
+                "ANTHROPIC_DEFAULT_OPUS_MODEL": model.name,
+                "ANTHROPIC_DEFAULT_SONNET_MODEL": model.name,
+                "ANTHROPIC_DEFAULT_HAIKU_MODEL": model.name,
+            },
+            "model": "sonnet",
+            "effortLevel": "medium",
+        }))
         yield path
 
 def run_experiments(*, benchmark_dir, method_names, overwrite=False, output_dir=None, output_namespace=None, config=None, method_options=None):
