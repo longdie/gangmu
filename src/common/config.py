@@ -167,10 +167,10 @@ class GangmuConfig:
             "openai_chat_completions",
         ).lower()
         trust_env = self.get_bool(f"{section_path}.trust_env", True)
-        if protocol not in {"openai_chat_completions", "claude_messages"}:
+        if protocol not in {"openai_chat_completions", "claude_messages", "openai_responses"}:
             raise ConfigError(
                 f"{section_path}.protocol must be 'openai_chat_completions' "
-                "or 'claude_messages'."
+                "or 'claude_messages' or 'openai_responses'."
             )
         api_key = (
             os.environ.get(api_key_env, "").strip() if api_key_env else ""

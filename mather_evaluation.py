@@ -1,10 +1,10 @@
-"""Run Gangmu and the six reported MathER baselines."""
+"""Run Gangmu and the eight reported MathER baselines."""
 from scripts.experiment.cli import configure, options, parser_for
 from scripts.experiment.dataset import ExperimentDataset
 from scripts.experiment.registry import METHOD_MODULES, rescore_directory, run_experiments
 
 def main():
-    parser = parser_for("Run Gangmu and six baselines on the released MathER-Alg benchmark.", "MathER_Evaluation")
+    parser = parser_for("Run Gangmu and eight baselines on the released MathER-Alg benchmark.", "MathER_Evaluation")
     parser.add_argument("--methods", nargs="+", choices=tuple(METHOD_MODULES), default=list(METHOD_MODULES))
     parser.add_argument("--claude-executable", help="Optional Claude Code executable for the agent baseline.")
     args = parser.parse_args()

@@ -1,0 +1,2 @@
+# Install requirements.txt first. Only AutoMathKG needs this local encoder.
+sentence-transformers>=3,<6

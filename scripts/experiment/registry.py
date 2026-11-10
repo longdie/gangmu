@@ -20,6 +20,8 @@ METHOD_MODULES = {
     "token_jaccard": "scripts.experiment.token_jaccard",
     "bm25_llm": "scripts.experiment.bm25_llm",
     "embedding": "scripts.experiment.embedding",
+    "automathkg": "scripts.experiment.automathkg",
+    "llmforem": "scripts.experiment.llmforem",
     "agent": "scripts.experiment.agent",
     "gangmu": "scripts.experiment.gangmu",
 }
@@ -27,6 +29,7 @@ METHOD_DIRECTORIES = {
     "always_nil": "Always_NIL", "identity_match": "Exact_String_Match",
     "token_jaccard": "Token_Jaccard", "bm25_llm": "BM25_SEV",
     "embedding": "Dense_Retrieval", "agent": "Claude_Code_Agent", "gangmu": "Gangmu",
+    "automathkg": "AutoMathKG", "llmforem": "LLMForEM",
     "without_semantic_normalization": "Without_Semantic_Normalization",
     "center_only": "With_Center_Only_Representation", "without_reranking": "Without_Reranking", "binary_sev": "With_Binary_SEV",
 }

@@ -55,6 +55,16 @@ base_url_env = "GANGMU_AGENT_BASE_URL"
 protocol = "openai_chat_completions"
 trust_env = true
 
+# AutoMathKG and LLMForEM use the Responses API, as in the reported runs.
+# Supply an API base URL (usually ending in /v1) or a full /responses URL.
+[providers.baseline]
+api_key = ""
+api_key_env = "GANGMU_BASELINE_API_KEY"
+base_url = ""
+base_url_env = "GANGMU_BASELINE_BASE_URL"
+protocol = "openai_responses"
+trust_env = true
+
 [models.default]
 name = "gpt-5.6-terra"
 provider = "llm"
@@ -98,6 +108,14 @@ provider = "llm"
 [models.agent]
 name = "gpt-5.6-terra"
 provider = "agent"
+
+[models.automathkg]
+name = "gpt-5.6-terra"
+provider = "baseline"
+
+[models.llmforem]
+name = "gpt-5.6-terra"
+provider = "baseline"
 
 [models.evidence_precision_judge]
 name = "claude-opus-5"
@@ -220,6 +238,12 @@ executable = "claude"
 max_turns = 20
 timeout_seconds = 900.0
 max_additional_searches = 2
+
+[automathkg]
+# A local model directory can be used instead of the Hugging Face model ID.
+embedding_model = "sentence-transformers/all-MiniLM-L6-v2"
+embedding_revision = "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+local_files_only = false
 
 [evaluation]
 parallel_workers = 5
